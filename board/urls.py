@@ -11,7 +11,9 @@ router.register(r'lists', ListViewSet)
 router.register(r'cards', CardViewSet)
 router.register(r'comments', CommentViewSet)
 
-urlpatterns=[
-    path('me/',MeAPI.as_view()),
-]
-urlpatterns +=router.urls
+# urlpatterns=[
+#     path('me/',MeAPI.as_view()),
+# ]
+
+
+urlpatterns =router.urls
