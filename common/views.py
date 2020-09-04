@@ -20,11 +20,6 @@ class AttachmentViewSet(viewsets.ModelViewSet):
 		serializer=AttachmentSerializer(queryset,many=True,context={'request': request})
 		return Response(serializer.data,status=200)
 
-	def retrieve(self,request,pk=None):
-		queryset=Attachment.objects.get(id=pk)
-		serializer=AttachmentSerializer(queryset)
-		return Response(serializer.data,status=201)
-
 	def post(self,request,format=None):
 		file_obj=request.data['document']
 		serializer=AttachmentSerializer(data=request.data)
