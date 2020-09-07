@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.views import APIView
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -20,28 +21,41 @@ class BoardViewSet(viewsets.ModelViewSet):
 	search_fields = ['title']
 
 	queryset=Board.objects.all()
-	serializer_class=BoardSerializer
+	# serializer_class=BoardSerializer
+
+	def get_serializer_class(self):
+		if self.action=='retrieve' or self.action=='update':
+			return BoardDetailSerializer
+		return BoardSerializer
 
 class ListViewSet(viewsets.ModelViewSet):
-	filter_backends = [filters.SearchFilter]
+	filter_backends = [filters.SearchFilter,DjangoFilterBackend]
 	search_fields = ['title']
 
 	queryset=List.objects.all()
-	serializer_class=ListSerializer
+	
+	def get_serializer_class(self):
+		if self.action=='retrieve' or self.action=='update':
+			return ListDetailSerializer
+		return ListSerializer
 
 class CardViewSet(viewsets.ModelViewSet):
-	filter_backends = [filters.SearchFilter]
+	filter_backends = [filters.SearchFilter,DjangoFilterBackend]
 	search_fields = ['title']
 
 	queryset=Card.objects.all()
-	serializer_class=CardSerializer
+	
+	def get_serializer_class(self):
+		if self.action=='retrieve' or self.action=='update':
+			return CardDetailSerializer
+		return CardSerializer
 
 class CommentViewSet(viewsets.ModelViewSet):
 
 	queryset=Comment.objects.all()
 	serializer_class=CommentSerializer
 
-class OrderLists(APIView):
+class ArrangeLists(APIView):
 
 	def post(self,request):
 		request_data=request.data
@@ -50,15 +64,7 @@ class OrderLists(APIView):
 		i=1
 
 		for list_id in ordered_list:
-			try:
-				is_present=List.objects.filter(id=list_id).exists()
-			except:
-				is_present=False
-			if is_present is False:
-				return Response('ID does not exist!')
-
-		for list_id in ordered_list:
-			list_object=List.objects.get(id=list_id)
+			list_object=get_object_or_404(List,id=list_id)
 			serializer=ListSerializer(data={'board_id':board_id}, instance=list_object, partial=True)
 			if serializer.is_valid():
 				list_object.order=i
@@ -67,7 +73,7 @@ class OrderLists(APIView):
 		return Response("Done")
 
 
-class OrderCards(APIView):
+class ArrangeCards(APIView):
 
 	def post(self,request):
 		request_data=request.data
@@ -76,15 +82,7 @@ class OrderCards(APIView):
 		i=1
 
 		for card_id in ordered_cards:
-			try:
-				is_present=Card.objects.filter(id=card_id).exists()
-			except:
-				is_present=False
-			if is_present is False:
-				return Response('ID does not exist!')
-
-		for card_id in ordered_cards:
-			card_object=Card.objects.get(id=card_id)
+			card_object=get_object_or_404(Card,id=card_id)
 			serializer=CardSerializer(data={'list_id':list_id}, instance=card_object, partial=True)
 			if serializer.is_valid():
 				card_object.order=i
