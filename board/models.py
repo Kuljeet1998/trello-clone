@@ -13,17 +13,24 @@ class Board(UUIDTimeStamp, Enum):
 
 class List(UUIDTimeStamp, Enum):
 	board=models.ForeignKey(Board,related_name="lists",on_delete=models.CASCADE)
+	order=models.PositiveIntegerField(null=False)
 
 	def __str__(self):
 		return self.title
 
+	class Meta:
+		ordering=['order']
 
 class Card(UUIDTimeStamp, Enum):
 	list=models.ForeignKey(List,related_name="cards",on_delete=models.CASCADE)
 	attachments=models.ManyToManyField(Attachment,related_name="cards",null=True,blank=True)
+	order=models.PositiveIntegerField(null=False)
 
 	def __str__(self):
 		return self.title
+
+	class Meta:
+		ordering=['order']
 
 
 class Comment(UUIDTimeStamp):
