@@ -12,8 +12,8 @@ router.register(r'cards', CardViewSet, basename="cards")
 router.register(r'comments', CommentViewSet, basename="comments")
 
 urlpatterns=[
-    path('order_lists/',OrderLists.as_view()),
-    path('order_cards/',OrderCards.as_view())
+    path('arrange-lists/',ArrangeLists.as_view()),
+    path('arrange-cards/',ArrangeCards.as_view())
 ]
 
 
