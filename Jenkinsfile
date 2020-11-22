@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                    sh '''
+                    sh '''  exec bash
                             source /home/kuljeet/.bashrc
                             workon temp
                             cd /home/kuljeet/Desktop/trello
