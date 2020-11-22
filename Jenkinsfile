@@ -9,6 +9,18 @@ pipeline {
                 echo "Starting..."
             }
         }
+        stage('Test') {
+            steps {
+                    sh '''  exec bash
+                            source /home/kuljeet/.bashrc
+                            workon temp
+                            cd /home/kuljeet/Desktop/trello
+                            pip install -r requirements.txt
+                            ./manage.py test
+                            exit
+                        '''
+                    }
+                }
         stage('Deploy') {
             steps {
                     sh '''  exec bash
@@ -36,5 +48,10 @@ pipeline {
                 '''
             }
         }
+        stage('Done') {
+            steps {
+                    echo "DONE !"
+                    }
+                }
     }
 }
